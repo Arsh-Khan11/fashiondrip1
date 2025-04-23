@@ -19,7 +19,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-import { CreditCard, CheckCircle2, Indian, SmartphoneNfc } from "lucide-react";
+import { CreditCard, CheckCircle2, SmartphoneNfc } from "lucide-react";
 import {
   Tabs,
   TabsContent,

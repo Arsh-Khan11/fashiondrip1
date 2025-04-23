@@ -8,6 +8,8 @@ import {
   onlineAppointments, type OnlineAppointment, type InsertOnlineAppointment,
   contactSupport, type ContactSupport, type InsertContactSupport
 } from "@shared/schema";
+import { db } from "./db";
+import { eq } from "drizzle-orm";
 
 // Interface for storage operations
 export interface IStorage {
@@ -357,4 +359,168 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+// Database storage implementation
+export class DatabaseStorage implements IStorage {
+  // User methods
+  async getUser(id: number): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user;
+  }
+  
+  async getUserByUsername(username: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.username, username));
+    return user;
+  }
+  
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.email, email));
+    return user;
+  }
+  
+  async createUser(insertUser: InsertUser): Promise<User> {
+    const [user] = await db.insert(users).values(insertUser).returning();
+    return user;
+  }
+  
+  async updateUser(id: number, userData: Partial<User>): Promise<User | undefined> {
+    const [user] = await db
+      .update(users)
+      .set(userData)
+      .where(eq(users.id, id))
+      .returning();
+    return user;
+  }
+  
+  // Product methods
+  async getAllProducts(): Promise<Product[]> {
+    return await db.select().from(products);
+  }
+  
+  async getProductsByCategory(category: string): Promise<Product[]> {
+    return await db.select().from(products).where(eq(products.category, category));
+  }
+  
+  async getProductsByCollection(collection: string): Promise<Product[]> {
+    return await db.select().from(products).where(eq(products.collection, collection));
+  }
+  
+  async getProduct(id: number): Promise<Product | undefined> {
+    const [product] = await db.select().from(products).where(eq(products.id, id));
+    return product;
+  }
+  
+  async createProduct(insertProduct: InsertProduct): Promise<Product> {
+    const [product] = await db.insert(products).values(insertProduct).returning();
+    return product;
+  }
+  
+  async updateProduct(id: number, productData: Partial<Product>): Promise<Product | undefined> {
+    const [product] = await db
+      .update(products)
+      .set(productData)
+      .where(eq(products.id, id))
+      .returning();
+    return product;
+  }
+  
+  // Review methods
+  async getReviews(productId: number): Promise<Review[]> {
+    return await db.select().from(reviews).where(eq(reviews.productId, productId));
+  }
+  
+  async createReview(insertReview: InsertReview): Promise<Review> {
+    const [review] = await db.insert(reviews).values(insertReview).returning();
+    return review;
+  }
+  
+  // Order methods
+  async getOrders(userId: number): Promise<Order[]> {
+    return await db.select().from(orders).where(eq(orders.userId, userId));
+  }
+  
+  async getOrder(id: number): Promise<Order | undefined> {
+    const [order] = await db.select().from(orders).where(eq(orders.id, id));
+    return order;
+  }
+  
+  async createOrder(insertOrder: InsertOrder): Promise<Order> {
+    const [order] = await db.insert(orders).values(insertOrder).returning();
+    return order;
+  }
+  
+  async updateOrderStatus(id: number, status: string): Promise<Order | undefined> {
+    const [order] = await db
+      .update(orders)
+      .set({ status })
+      .where(eq(orders.id, id))
+      .returning();
+    return order;
+  }
+  
+  // Order Items methods
+  async getOrderItems(orderId: number): Promise<OrderItem[]> {
+    return await db.select().from(orderItems).where(eq(orderItems.orderId, orderId));
+  }
+  
+  async createOrderItem(insertOrderItem: InsertOrderItem): Promise<OrderItem> {
+    const [orderItem] = await db.insert(orderItems).values(insertOrderItem).returning();
+    return orderItem;
+  }
+  
+  // Tailor Booking methods
+  async getTailorBookings(userId: number): Promise<TailorBooking[]> {
+    return await db.select().from(tailorBookings).where(eq(tailorBookings.userId, userId));
+  }
+  
+  async getTailorBooking(id: number): Promise<TailorBooking | undefined> {
+    const [booking] = await db.select().from(tailorBookings).where(eq(tailorBookings.id, id));
+    return booking;
+  }
+  
+  async createTailorBooking(insertBooking: InsertTailorBooking): Promise<TailorBooking> {
+    const [booking] = await db.insert(tailorBookings).values(insertBooking).returning();
+    return booking;
+  }
+  
+  async updateTailorBookingStatus(id: number, status: string): Promise<TailorBooking | undefined> {
+    const [booking] = await db
+      .update(tailorBookings)
+      .set({ status })
+      .where(eq(tailorBookings.id, id))
+      .returning();
+    return booking;
+  }
+  
+  // Online Appointment methods
+  async getOnlineAppointments(userId: number): Promise<OnlineAppointment[]> {
+    return await db.select().from(onlineAppointments).where(eq(onlineAppointments.userId, userId));
+  }
+  
+  async getOnlineAppointment(id: number): Promise<OnlineAppointment | undefined> {
+    const [appointment] = await db.select().from(onlineAppointments).where(eq(onlineAppointments.id, id));
+    return appointment;
+  }
+  
+  async createOnlineAppointment(insertAppointment: InsertOnlineAppointment): Promise<OnlineAppointment> {
+    const [appointment] = await db.insert(onlineAppointments).values(insertAppointment).returning();
+    return appointment;
+  }
+  
+  async updateOnlineAppointmentStatus(id: number, status: string): Promise<OnlineAppointment | undefined> {
+    const [appointment] = await db
+      .update(onlineAppointments)
+      .set({ status })
+      .where(eq(onlineAppointments.id, id))
+      .returning();
+    return appointment;
+  }
+  
+  // Contact Support methods
+  async createContactSupport(insertContact: InsertContactSupport): Promise<ContactSupport> {
+    const [contact] = await db.insert(contactSupport).values(insertContact).returning();
+    return contact;
+  }
+}
+
+// Use database storage instead of memory storage
+export const storage = new DatabaseStorage();
