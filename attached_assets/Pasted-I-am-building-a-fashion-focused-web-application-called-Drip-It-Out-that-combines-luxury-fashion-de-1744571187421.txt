@@ -1,0 +1,122 @@
+I am building a fashion-focused web application called “Drip It Out” that combines luxury fashion designs with tailor appointment booking services. I want you to help me develop this web project using HTML, CSS, and JavaScript. The overall experience should feel luxury, minimal, and user-friendly, based on a premium fashion website style. The color palette should mainly include off-white or beige backgrounds (#F9F6F1), black text, and gold (#C8A96A) accents, with clean, modern fonts like Poppins for body text and Playfair Display for headings. The goal is to offer users a high-end fashion experience while maintaining practical features like appointment scheduling, customization, and e-commerce functionality.
+
+I will also provide a Figma UI/UX design, so please follow the layout and design elements as closely as possible. If I upload screenshots or Figma links, use those for visual styling reference. The site should be fully responsive (mobile, tablet, and desktop ready) and structured in an organized way with proper file separation: one folder each for HTML files, CSS stylesheets, JavaScript files, and image assets.
+
+🌐 Pages and Features Required:
+Home Page
+
+This is the landing page of the site.
+
+It should feature a clean header with the Drip It Out logo, navigation menu (links to all other pages), and a large hero section (image + text like “Book a tailor from your home” or “Luxury fashion at your doorstep”).
+
+Optionally, you can show featured designs or testimonials from past clients to build trust.
+
+Include a clear call-to-action button (“Book Now” or “Explore Designs”).
+
+Tailor Booking Page
+
+This page allows users to book an at-home tailor visit.
+
+Use a form that collects user details like name, address, preferred date and time, and any specific requests.
+
+It should be styled like a premium booking service (clean spacing, calendar input, dropdowns, etc.).
+
+Include a submit button with a thank-you message or success alert (no need for backend yet).
+
+Drip It Out Designs Page
+
+This page showcases all the existing fashion pieces designed by the brand.
+
+Each item should include an image, name, brief description, and a “Customize” or “Select Size” option.
+
+Users should be able to choose a custom size (like S, M, L, or input custom measurements).
+
+You can add a “Add to Cart” button here too.
+
+Online Appointment Page
+
+This page allows users to schedule a virtual appointment (e.g., via Google Meet) with a tailor.
+
+It should include a form to book a date/time and upload reference images or write notes.
+
+You can mock the backend part (just show confirmation message), or optionally allow them to paste their Google Meet link for now.
+
+Login Page
+
+A clean and stylish login page using your luxury branding.
+
+Inputs: email and password.
+
+Include a “Forgot password?” link and a “Login” button.
+
+Redirect to the homepage or profile after login (mock redirect is fine for now).
+
+Sign-Up Page
+
+Similar styling to login page.
+
+Inputs: full name, email, password, confirm password.
+
+Optionally include a checkbox for terms and conditions.
+
+After submission, show a success message or redirect to login page.
+
+Cart Page
+
+Users can view the items they added from the Designs page.
+
+Display: product image, name, price, quantity selector, “Remove” button.
+
+Show subtotal and a “Proceed to Payment” button.
+
+Keep it simple and clean.
+
+Payment Page (Dummy)
+
+No real payment processing needed now.
+
+Create a mock payment form: card number, expiry, CVV, name on card.
+
+Show “Payment Successful” message after clicking “Pay Now”.
+
+Profile Settings Page
+
+Allow users to update name, email, phone number, and optionally password.
+
+Display a basic profile layout with edit fields and a “Save Changes” button.
+
+You can show dummy user info for now — no backend required.
+
+🧱 Technical Structure (Folder Organization)
+Please create the following folder structure for better project organization:
+
+pgsql
+Copy
+Edit
+/index.html                      --> Home page  
+/pages/  
+   booking.html                 --> Tailor booking  
+   designs.html                 --> Design catalog  
+   appointment.html             --> Google Meet appointments  
+   login.html                   --> Login  
+   signup.html                  --> Sign-up  
+   cart.html                    --> Shopping cart  
+   profile.html                 --> Profile settings  
+   payment.html                 --> Dummy payment  
+/css/  
+   styles.css                   --> All styling  
+/js/  
+   scripts.js                   --> Functionality and interactivity  
+/images/                        --> Store product images and logo
+🧠 Extra Notes:
+Every page should have a shared navigation bar and a footer for a complete look.
+
+Make sure buttons and forms are styled properly, not raw HTML defaults.
+
+Use hover effects, smooth transitions, and padding to keep the experience elegant.
+
+Don’t include unnecessary animations or flashy elements — keep it minimal and premium.
+
+You can use simple alert() or modals for confirmation messages for now.
+
+Let me know if you need anything else. I'm ready to provide the Figma design link or screenshots as reference. This is a portfolio-level project, so it needs to look modern, professional, and premium.
