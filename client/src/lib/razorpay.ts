@@ -34,7 +34,7 @@ export const initiateRazorpayPayment = (options: Omit<RazorpayOptions, 'key'>) =
     try {
       const rzp = new window.Razorpay({
         ...options,
-        key: 'rzp_test_UBSWQulaiHzkNh', // This is a test key, replace with actual key in production
+        key: import.meta.env.VITE_RAZORPAY_KEY_ID || process.env.RAZORPAY_KEY_ID, // Using the environment variable
         handler: function (response: PaymentResponse) {
           resolve(response);
         },
