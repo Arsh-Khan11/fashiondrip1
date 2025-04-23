@@ -1,13 +1,14 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
+import tailorMachineBg from "../../assets/tailor-machine-bg.png";
 
 const Hero = () => {
   return (
     <section className="relative h-[600px] md:h-[700px] w-full bg-black overflow-hidden">
       <div 
-        className="absolute inset-0 opacity-60"
+        className="absolute inset-0 opacity-80"
         style={{
-          backgroundImage: "url('https://images.unsplash.com/photo-1490481651871-ab68de25d43d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80')",
+          backgroundImage: `url(${tailorMachineBg})`,
           backgroundSize: "cover",
           backgroundPosition: "center"
         }}
