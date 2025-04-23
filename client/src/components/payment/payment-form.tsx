@@ -41,7 +41,22 @@ const paymentFormSchema = z.object({
   expiryDate: z.string().regex(/^(0[1-9]|1[0-2])\/\d{2}$/, { message: "Expiry date must be in MM/YY format" }).optional(),
   cvv: z.string().regex(/^\d{3,4}$/, { message: "CVV must be 3 or 4 digits" }).optional(),
   // UPI fields (conditionally required)
-  upiId: z.string().optional(),
+  upiId: z.string().regex(/^[a-zA-Z0-9.\-_]{2,256}@[a-zA-Z][a-zA-Z]{2,64}$/, { 
+    message: "Enter a valid UPI ID (e.g., yourname@upi)" 
+  }).optional(),
+}).refine((data) => {
+  // If card payment, require card fields
+  if (data.paymentMethod === "card") {
+    return !!data.cardNumber && !!data.expiryDate && !!data.cvv;
+  }
+  // If UPI payment, require UPI ID
+  if (data.paymentMethod === "upi") {
+    return !!data.upiId;
+  }
+  return true;
+}, {
+  message: "Please fill in all required payment details",
+  path: ["paymentMethod"]
 });
 
 type PaymentFormValues = z.infer<typeof paymentFormSchema>;
@@ -93,7 +108,8 @@ const PaymentForm = () => {
       const amount = getTotal();
       const amountInPaise = convertToPaise(amount / 100); // Convert cents to paise
       
-      const razorpayResponse = await initiateRazorpayPayment({
+      // Common options for both payment methods
+      const razorpayOptions: any = {
         amount: amountInPaise,
         currency: "INR",
         name: "Drip It Out",
@@ -109,11 +125,23 @@ const PaymentForm = () => {
         theme: {
           color: "#C8A96A",
         },
-        handler: function (response) {
+        handler: function (response: any) {
           // This will be called after successful payment
           console.log(response);
         },
-      });
+      };
+      
+      // Add UPI-specific options when UPI payment method is selected
+      if (formData.paymentMethod === "upi") {
+        razorpayOptions.method = {
+          upi: {
+            flow: "collect",
+            vpa: formData.upiId,
+          }
+        };
+      }
+      
+      const razorpayResponse = await initiateRazorpayPayment(razorpayOptions);
       
       return razorpayResponse;
     } catch (error) {
@@ -405,11 +433,12 @@ const PaymentForm = () => {
                             <Input 
                               {...field}
                               placeholder="yourname@upi"
+                              required={paymentMethod === "upi"}
                             />
                           </FormControl>
                           <FormMessage />
                           <p className="text-xs text-gray-500 mt-1">
-                            Enter your UPI ID (e.g., yourname@okicici, yourname@ybl)
+                            Enter your UPI ID (e.g., yourname@okicici, yourname@paytm, yourname@ybl)
                           </p>
                         </FormItem>
                       )}
