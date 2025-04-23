@@ -49,10 +49,7 @@ const paymentFormSchema = z.object({
   if (data.paymentMethod === "card") {
     return !!data.cardNumber && !!data.expiryDate && !!data.cvv;
   }
-  // If UPI payment, require UPI ID
-  if (data.paymentMethod === "upi") {
-    return !!data.upiId;
-  }
+  // UPI payment will be handled directly by Razorpay
   return true;
 }, {
   message: "Please fill in all required payment details",
@@ -131,14 +128,11 @@ const PaymentForm = () => {
         },
       };
       
-      // Add UPI-specific options when UPI payment method is selected
+      // Set method preference based on payment method selection
       if (formData.paymentMethod === "upi") {
-        razorpayOptions.method = {
-          upi: {
-            flow: "collect",
-            vpa: formData.upiId,
-          }
-        };
+        razorpayOptions.method = "upi";
+      } else if (formData.paymentMethod === "card") {
+        razorpayOptions.method = "card";
       }
       
       const razorpayResponse = await initiateRazorpayPayment(razorpayOptions);
@@ -192,7 +186,7 @@ const PaymentForm = () => {
             ...(data.paymentMethod === "card" ? {
               lastFour: data.cardNumber?.slice(-4) || "",
             } : {
-              upiId: data.upiId
+              paymentMethod: "UPI via Razorpay"
             })
           },
           items: orderItems
@@ -423,36 +417,25 @@ const PaymentForm = () => {
                   </div>
                 ) : (
                   <div className="space-y-4 p-4 border border-gray-200 rounded-md">
-                    <FormField
-                      control={form.control}
-                      name="upiId"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>UPI ID</FormLabel>
-                          <FormControl>
-                            <Input 
-                              {...field}
-                              placeholder="yourname@upi"
-                              required={paymentMethod === "upi"}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                          <p className="text-xs text-gray-500 mt-1">
-                            Enter your UPI ID (e.g., yourname@okicici, yourname@paytm, yourname@ybl)
-                          </p>
-                        </FormItem>
-                      )}
-                    />
-                    
-                    <div className="flex flex-wrap gap-2 mt-4">
-                      <img src="https://1000logos.net/wp-content/uploads/2021/03/Paytm_Logo.png" 
-                           alt="Paytm" className="h-8 object-contain" />
-                      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/UPI-Logo-vector.svg/1280px-UPI-Logo-vector.svg.png" 
-                           alt="UPI" className="h-8 object-contain" />
-                      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Google_Pay_Logo.svg/512px-Google_Pay_Logo.svg.png" 
-                           alt="Google Pay" className="h-8 object-contain" />
-                      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Paytm_Logo_%28standalone%29.svg/2560px-Paytm_Logo_%28standalone%29.svg.png" 
-                           alt="PhonePe" className="h-8 object-contain" />
+                    <div className="p-4 bg-gray-50 rounded-md">
+                      <p className="text-center font-medium mb-2">UPI Payment through Razorpay</p>
+                      <p className="text-sm text-center text-gray-600 mb-3">
+                        You'll be redirected to Razorpay's secure payment gateway to complete your UPI payment
+                      </p>
+                      <div className="flex flex-wrap gap-3 justify-center mt-4">
+                        <img src="https://asset.brandfetch.io/idQehyhmvD/idJF9sBECo.png" 
+                            alt="Razorpay" className="h-10 object-contain" />
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/UPI-Logo-vector.svg/1280px-UPI-Logo-vector.svg.png" 
+                            alt="UPI" className="h-10 object-contain" />
+                      </div>
+                      <div className="flex flex-wrap gap-2 mt-4 justify-center">
+                        <img src="https://1000logos.net/wp-content/uploads/2021/03/Paytm_Logo.png" 
+                            alt="Paytm" className="h-8 object-contain" />
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Google_Pay_Logo.svg/512px-Google_Pay_Logo.svg.png" 
+                            alt="Google Pay" className="h-8 object-contain" />
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Paytm_Logo_%28standalone%29.svg/2560px-Paytm_Logo_%28standalone%29.svg.png" 
+                            alt="PhonePe" className="h-8 object-contain" />
+                      </div>
                     </div>
                   </div>
                 )}
