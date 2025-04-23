@@ -15,6 +15,7 @@ import session from "express-session";
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import bcrypt from "bcryptjs";
+import { createRazorpayOrder, verifyPaymentSignature } from "./razorpay";
 
 // Configure session store
 import memorystore from "memorystore";
@@ -366,6 +367,48 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: error.errors });
       }
       res.status(500).json({ message: "Failed to create online appointment" });
+    }
+  });
+  
+  // Payment integration routes
+  app.post("/api/razorpay/create-order", requireAuth, async (req, res) => {
+    try {
+      const { amount, currency = "INR", receipt, notes } = req.body;
+      
+      // Validate amount
+      if (!amount || isNaN(amount) || amount <= 0) {
+        return res.status(400).json({ message: "Invalid amount" });
+      }
+      
+      // Create Razorpay order
+      const order = await createRazorpayOrder(amount, currency, receipt, notes);
+      res.json(order);
+    } catch (error) {
+      console.error("Error creating Razorpay order:", error);
+      res.status(500).json({ message: "Failed to create payment order" });
+    }
+  });
+  
+  app.post("/api/razorpay/verify-payment", async (req, res) => {
+    try {
+      const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
+      
+      // Validate required fields
+      if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
+        return res.status(400).json({ message: "Missing payment verification details" });
+      }
+      
+      // Verify payment signature
+      const isValid = verifyPaymentSignature(razorpay_order_id, razorpay_payment_id, razorpay_signature);
+      
+      if (isValid) {
+        res.json({ verified: true });
+      } else {
+        res.status(400).json({ verified: false, message: "Invalid payment signature" });
+      }
+    } catch (error) {
+      console.error("Error verifying payment:", error);
+      res.status(500).json({ message: "Failed to verify payment" });
     }
   });
   

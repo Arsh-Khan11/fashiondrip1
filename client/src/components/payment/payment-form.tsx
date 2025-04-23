@@ -40,10 +40,7 @@ const paymentFormSchema = z.object({
   cardNumber: z.string().regex(/^\d{16}$/, { message: "Card number must be 16 digits" }).optional(),
   expiryDate: z.string().regex(/^(0[1-9]|1[0-2])\/\d{2}$/, { message: "Expiry date must be in MM/YY format" }).optional(),
   cvv: z.string().regex(/^\d{3,4}$/, { message: "CVV must be 3 or 4 digits" }).optional(),
-  // UPI fields (conditionally required)
-  upiId: z.string().regex(/^[a-zA-Z0-9.\-_]{2,256}@[a-zA-Z][a-zA-Z]{2,64}$/, { 
-    message: "Enter a valid UPI ID (e.g., yourname@upi)" 
-  }).optional(),
+  // No UPI ID field needed as we're using Razorpay's native UPI flow
 }).refine((data) => {
   // If card payment, require card fields
   if (data.paymentMethod === "card") {
@@ -83,7 +80,6 @@ const PaymentForm = () => {
       cardNumber: "",
       expiryDate: "",
       cvv: "",
-      upiId: "",
     }
   });
   
@@ -416,25 +412,43 @@ const PaymentForm = () => {
                     </div>
                   </div>
                 ) : (
-                  <div className="space-y-4 p-4 border border-gray-200 rounded-md">
-                    <div className="p-4 bg-gray-50 rounded-md">
-                      <p className="text-center font-medium mb-2">UPI Payment through Razorpay</p>
-                      <p className="text-sm text-center text-gray-600 mb-3">
-                        You'll be redirected to Razorpay's secure payment gateway to complete your UPI payment
+                  <div className="space-y-4 p-6 border border-gray-200 rounded-md shadow-sm bg-gradient-to-r from-gray-50 to-white">
+                    <div className="p-5 rounded-md bg-white border border-gray-100 shadow-sm">
+                      <h3 className="playfair text-center text-lg font-semibold mb-3">UPI Payment</h3>
+                      <p className="text-sm text-center text-gray-600 mb-4">
+                        Scan a QR code or use your preferred UPI app to complete payment securely through Razorpay
                       </p>
-                      <div className="flex flex-wrap gap-3 justify-center mt-4">
-                        <img src="https://asset.brandfetch.io/idQehyhmvD/idJF9sBECo.png" 
-                            alt="Razorpay" className="h-10 object-contain" />
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/UPI-Logo-vector.svg/1280px-UPI-Logo-vector.svg.png" 
-                            alt="UPI" className="h-10 object-contain" />
+                      
+                      <div className="flex justify-center mb-4">
+                        <div className="w-14 h-1 bg-[#C8A96A]"></div>
                       </div>
-                      <div className="flex flex-wrap gap-2 mt-4 justify-center">
-                        <img src="https://1000logos.net/wp-content/uploads/2021/03/Paytm_Logo.png" 
-                            alt="Paytm" className="h-8 object-contain" />
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Google_Pay_Logo.svg/512px-Google_Pay_Logo.svg.png" 
-                            alt="Google Pay" className="h-8 object-contain" />
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Paytm_Logo_%28standalone%29.svg/2560px-Paytm_Logo_%28standalone%29.svg.png" 
-                            alt="PhonePe" className="h-8 object-contain" />
+                      
+                      <div className="flex flex-wrap gap-4 justify-center mt-5 mb-3">
+                        <div className="text-center">
+                          <img src="https://asset.brandfetch.io/idQehyhmvD/idJF9sBECo.png" 
+                              alt="Razorpay" className="h-10 object-contain mx-auto mb-2" />
+                          <p className="text-xs text-gray-500">Secure Payments</p>
+                        </div>
+                        <div className="text-center">
+                          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/UPI-Logo-vector.svg/1280px-UPI-Logo-vector.svg.png" 
+                              alt="UPI" className="h-10 object-contain mx-auto mb-2" />
+                          <p className="text-xs text-gray-500">UPI Enabled</p>
+                        </div>
+                      </div>
+                      
+                      <div className="flex flex-wrap gap-4 mt-5 justify-center border-t border-gray-100 pt-4">
+                        <div className="text-center">
+                          <img src="https://1000logos.net/wp-content/uploads/2021/03/Paytm_Logo.png" 
+                              alt="Paytm" className="h-7 object-contain" />
+                        </div>
+                        <div className="text-center">
+                          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Google_Pay_Logo.svg/512px-Google_Pay_Logo.svg.png" 
+                              alt="Google Pay" className="h-7 object-contain" />
+                        </div>
+                        <div className="text-center">
+                          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Paytm_Logo_%28standalone%29.svg/2560px-Paytm_Logo_%28standalone%29.svg.png" 
+                              alt="PhonePe" className="h-7 object-contain" />
+                        </div>
                       </div>
                     </div>
                   </div>
