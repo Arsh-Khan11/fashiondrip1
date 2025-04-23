@@ -1,0 +1,70 @@
+Project Name: Drip It Out – Luxury Tailor Booking Web App
+Tech Stack: HTML, CSS, JavaScript, Node.js (optional for backend), Razorpay Integration
+Platform: Replit
+
+Project Description:
+“Drip It Out” is a premium fashion-focused web application that combines custom fashion designs with at-home and virtual tailor booking services. The app offers a luxury experience inspired by high-end fashion websites. The project is built with clean code and elegant styling using HTML, CSS, and JavaScript, with optional backend functionality using Node.js and Replit DB.
+
+✅ Core Features:
+
+Home Page with full-width hero, luxury feel, and CTA
+
+Tailor Booking Page (home visit form)
+
+Design Catalog Page with "Add to Cart" and size selection
+
+Virtual Appointment Page for Google Meet sessions
+
+Login/Signup Pages (mock or functional)
+
+Cart and Checkout Pages
+
+Dummy Payment Integration using Razorpay UPI + Card Payments
+
+Discount Code Support on cart page (e.g., SAVE10)
+
+Return & Replace Request Form
+
+Review System under each product
+
+Recent Orders Section in user profile
+
+Contact Support Page with styled form
+
+🎨 Styling Guidelines:
+
+Off-white (#F9F6F1) background, black text, gold highlights (#C8A96A)
+
+Fonts: “Playfair Display” (headings) & “Poppins” (body)
+
+Clean, minimal, responsive layout for mobile/tablet/desktop
+
+Hover effects, spacing, and elegant buttons
+
+📁 Folder Structure:
+
+pgsql
+Copy
+Edit
+/index.html                      --> Home page  
+/pages/  
+   booking.html                 --> Tailor booking  
+   designs.html                 --> Design catalog  
+   appointment.html             --> Virtual appointment  
+   login.html / signup.html     --> Auth pages  
+   cart.html / payment.html     --> Cart & checkout  
+   profile.html                 --> Recent orders, return/replace  
+   contact.html                 --> Support form  
+/css/styles.css                 --> All styling  
+/js/scripts.js                  --> Razorpay & form logic  
+/images/                        --> Products, branding assets  
+/server.js (optional)           --> Node.js backend (optional Razorpay verification)  
+🧾 Notes:
+
+Razorpay button triggers payment via UPI/card
+
+Discount codes applied using JavaScript
+
+Return, review, and recent orders are handled with mock JSON or Replit DB
+
+Priority on performance, elegance, and intuitive navigation
